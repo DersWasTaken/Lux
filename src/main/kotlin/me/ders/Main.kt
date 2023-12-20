@@ -8,6 +8,7 @@ import me.ders.event.on
 import net.minestom.server.MinecraftServer
 import net.minestom.server.coordinate.Pos
 import net.minestom.server.entity.GameMode
+import net.minestom.server.event.player.PlayerChangeHeldSlotEvent
 import net.minestom.server.event.player.PlayerLoginEvent
 import net.minestom.server.instance.LightingChunk
 import net.minestom.server.instance.block.Block
@@ -37,6 +38,15 @@ fun main() {
             player.respawnPoint = Pos(0.0, 42.0, 0.0)
             player.gameMode = GameMode.CREATIVE
         }
+    }
+
+    GlobalScope.launch {
+        println("waiting")
+        val event = await<PlayerLoginEvent>() {
+
+        }
+        println("continuing")
+        event.player.sendMessage("HELLO!")
     }
 
 }
