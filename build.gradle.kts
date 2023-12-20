@@ -1,4 +1,6 @@
+import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
     idea
@@ -20,4 +22,10 @@ dependencies {
     implementation("net.kyori:adventure-text-serializer-ansi:4.14.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
     implementation("net.kyori:adventure-text-minimessage:4.14.0")
+}
+
+tasks.named("compileKotlin", KotlinCompilationTask::class.java) {
+    compilerOptions {
+        freeCompilerArgs.add("-Xcontext-receivers")
+    }
 }

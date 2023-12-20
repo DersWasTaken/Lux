@@ -8,22 +8,19 @@ import java.util.concurrent.ConcurrentHashMap
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 
-@RequiresOptIn(level = RequiresOptIn.Level.ERROR, message = "Only to be used by internal DSL structure")
-@Retention(AnnotationRetention.BINARY)
-@Target(AnnotationTarget.FUNCTION)
-annotation class KEventInternal
-
 private val handlerRegistry = ConcurrentHashMap<Class<*>, MutableList<EventListener<Event>>>()
 
 private val handlerNode: EventNode<Event> = EventNode.type("KEvent-Node", EventFilter.ALL).also {
     MinecraftServer.getGlobalEventHandler().addChild(it)
 }
 
-interface EventListener<in E : Event> : (E) -> Unit
+fun interface EventListener<in E : Event> : (E) -> Unit
+typealias Execute<E> = context (E) () -> Unit
+typealias Filter<E> = context(E) () -> Boolean
 
 class KEvent<E : Event> private constructor (
-    private val executeFunction: (E) -> Unit,
-    private val filterFunction: (E) -> Boolean,
+    private val executeFunction: Execute<E>,
+    private val filterFunction: Filter<E>,
     private val asyncFunction: Continuation<E>?
 ) : EventListener<E> {
 
@@ -35,26 +32,21 @@ class KEvent<E : Event> private constructor (
             if(isAsync) asyncFunction!!.resume(event)
         }
     }
-
     class Builder<E : Event>(private val eventClass: Class<E>) {
-        private var executeFunction: (E) -> Unit = {}
-        private var filterFunction: (E) -> Boolean = {true}
+        private var executeFunction: Execute<E> = {}
+        private var filterFunction: Filter<E> = {true}
         private var asyncFunction: Continuation<E>? = null
 
-        fun filter(lambda: E.() -> Boolean): Builder<E> {
+        fun filter(lambda: Filter<E>) {
             filterFunction = lambda
-            return this;
         }
 
-        @KEventInternal
-        fun async(continuation: Continuation<E>): Builder<E> {
+        fun async(continuation:  Continuation<E>) {
             asyncFunction = continuation
-            return this;
         }
 
-        fun execute(lambda: E.() -> Unit): Builder<E> {
+        fun execute(lambda: Execute<E>) {
             executeFunction = lambda
-            return this;
         }
 
         fun build() : KEvent<E> {
