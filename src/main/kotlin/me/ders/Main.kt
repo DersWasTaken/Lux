@@ -1,9 +1,5 @@
 package me.ders
 
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import me.ders.event.await
 import me.ders.event.on
 import net.minestom.server.MinecraftServer
 import net.minestom.server.coordinate.Pos
@@ -13,7 +9,6 @@ import net.minestom.server.instance.LightingChunk
 import net.minestom.server.instance.block.Block
 import net.minestom.server.instance.generator.GenerationUnit
 
-@OptIn(DelicateCoroutinesApi::class)
 fun main() {
     val server = MinecraftServer.init()
 
