@@ -28,7 +28,7 @@ annotation class KEventDsl
  */
 fun interface EventListener<in E : Event> : (E) -> Unit
 
-private val handlerRegistry = ConcurrentHashMap<Class<*>, MutableList<EventListener<Event>>>()
+private val handlerRegistry: ConcurrentHashMap<Class<*>, MutableList<EventListener<Event>>> = ConcurrentHashMap<Class<*>, MutableList<EventListener<Event>>>()
 
 private val handlerNode: EventNode<Event> = EventNode.type("KEvent-Node", EventFilter.ALL).also {
     MinecraftServer.getGlobalEventHandler().addChild(it)
@@ -148,7 +148,7 @@ class KEvent<E : Event> private constructor(
      * @author Der_s
      */
     class Builder<E : Event>(private val eventClass: Class<E>) {
-        private var executeFunction: (E) -> Unit = {  }
+        private var executeFunction: (E) -> Unit = { }
         private var filterFunction: (E) -> Boolean = { true }
         private var asyncFunction: Continuation<E>? = null
 
@@ -234,13 +234,13 @@ class KEvent<E : Event> private constructor(
             val event = KEvent(executeFunction, filterFunction, asyncFunction, removeAfter)
             var registry = handlerRegistry[eventClass]
 
-            if(registry.isNullOrEmpty()) registry = arrayListOf()
+            if (registry.isNullOrEmpty()) registry = arrayListOf()
 
             @Suppress("UNCHECKED_CAST")
             registry.add(event as EventListener<Event>)
             handlerRegistry[eventClass] = registry
 
-            if(!handlerNode.hasListener(eventClass))
+            if (!handlerNode.hasListener(eventClass))
                 handlerNode.addListener(eventClass) {
                     handlerRegistry[it.javaClass]!!.forEach { handler -> handler.invoke(it) }
                 }

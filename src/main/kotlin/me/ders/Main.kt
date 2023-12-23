@@ -33,5 +33,4 @@ fun main() {
             player.gameMode = GameMode.CREATIVE
         }
     }
-
 }
