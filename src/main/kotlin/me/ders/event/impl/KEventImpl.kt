@@ -1,12 +1,11 @@
 package me.ders.event.impl
 
 import kotlinx.coroutines.*
+import me.ders.event.impl.KEvent.Builder
 import net.minestom.server.MinecraftServer
 import net.minestom.server.event.Event
 import net.minestom.server.event.EventFilter
 import net.minestom.server.event.EventNode
-import net.minestom.server.event.player.PlayerLoginEvent
-import org.jetbrains.annotations.Async
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
@@ -139,7 +138,12 @@ class KEvent<E : Event> private constructor(
     /**
      * Represents a mutable builder for [KEvent] DSL.
      *
-     * @property eventClass the class of the [E] which must inherit [Event]
+     * @property eventClass the class of the [E] which must inherit [Event].
+     * @property executeFunction Defines a callback to be run on [invoke] in [KEvent].
+     * @property filterFunction Defines a callback of [Boolean] to be run on [invoke] to qualify [Event] of type [E] in [KEvent].
+     * @property asyncFunction Defines an optional object of [Continuation] for suspending execution within a [CoroutineScope] in [KEvent].
+     *
+     * @see KEvent
      *
      * @author Der_s
      */

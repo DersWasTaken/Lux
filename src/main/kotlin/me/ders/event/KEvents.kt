@@ -1,13 +1,9 @@
 package me.ders.event
 
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 import me.ders.event.impl.KEvent
 import me.ders.event.impl.KEventDsl
 import net.minestom.server.event.Event
-import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.suspendCoroutine
 
 /**
