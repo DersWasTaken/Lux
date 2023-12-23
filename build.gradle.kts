@@ -6,10 +6,12 @@ plugins {
     idea
     java
     kotlin("jvm") version "1.9.10"
+    id("maven-publish")
 }
 
 group = "me.ders"
 version = "0.0.1"
+
 
 repositories {
     mavenCentral()
@@ -27,5 +29,15 @@ dependencies {
 tasks.named("compileKotlin", KotlinCompilationTask::class.java) {
     compilerOptions {
         freeCompilerArgs.add("-Xcontext-receivers")
+    }
+}
+
+publishing {
+    publications {
+        register<MavenPublication>("release") {
+            groupId = "com.github.DersWasTaken"
+            artifactId = "Lux"
+            version = "0.0.1"
+        }
     }
 }
